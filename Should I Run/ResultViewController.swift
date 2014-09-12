@@ -11,6 +11,7 @@ import MapKit
 
 class ResultViewController: UIViewController, CLLocationManagerDelegate, WalkingDirectionsDelegate {
     
+    //MARK: Variables
     let locationManager = SharedUserLocation
     
 //    var firstRun:Bool = false
@@ -36,12 +37,12 @@ class ResultViewController: UIViewController, CLLocationManagerDelegate, Walking
     var alarmTime = 0
     
     
-    //result area things
+    //MARK: Result area IBOutlets
     @IBOutlet var resultArea: UIView?
     @IBOutlet var instructionLabel: UILabel?
     @IBOutlet var alarmButton: UIButton?
     
-    //detial area things
+    //MARK: Detail area IBOutlets
     @IBOutlet var timeToNextTrainLabel: UILabel?
     @IBOutlet var distanceToStationLabel: UILabel?
     @IBOutlet var stationNameLabel: UILabel?
@@ -52,16 +53,18 @@ class ResultViewController: UIViewController, CLLocationManagerDelegate, Walking
     @IBOutlet var timeWalkingLabel: UILabel?
     @IBOutlet var secondsToNextTrainLabel: UILabel?
     
-    //following departure area things
+    //MARK: Following departure IBOutlets
     @IBOutlet var followingDepartureLabel: UILabel?
     @IBOutlet var followingDepartureDestinationLabel: UILabel?
     @IBOutlet var followingDepartureSecondsLabel: UILabel?
     
-    
+    //MARK: Timers
     var secondTimer: NSTimer = NSTimer()
     var updateResultTimer : NSTimer = NSTimer()
     
+    //MARK:
     
+    //MARK: ViewController Delegates
     override func viewDidLoad() {
         
         super.viewDidLoad()
@@ -89,9 +92,11 @@ class ResultViewController: UIViewController, CLLocationManagerDelegate, Walking
 
     }
     
+    //MARK:
+    
     func displayResults() {
-        //calculate
-        //logic for when to run
+        //calculate logic for when to run
+        
         var foundResult = false
         var walkingTime = 0
         var runningTime = 0
@@ -275,8 +280,7 @@ class ResultViewController: UIViewController, CLLocationManagerDelegate, Walking
 
     }
     
-    // Error handling-----------------------------------------------------
-    
+    //MARK: Error handling
     
     // This function gets called when the user clicks on the alertView button to dismiss it (see didReceiveGoogleResults)
     // It performs the unwind segue when done.
