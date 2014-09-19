@@ -19,6 +19,7 @@ enum NetworkStatusStruct: Int {
 class LoadingViewController: UIViewController, BartApiControllerDelegate, GoogleAPIControllerProtocol, ParseGoogleHelperDelegate, CLLocationManagerDelegate, UIAlertViewDelegate, MuniAPIControllerDelegate {
     
     var viewHasAlreadyAppeared = false
+    var locationObserver:AnyObject?
     
     var backgroundColor = UIColor()
     
@@ -86,7 +87,7 @@ class LoadingViewController: UIViewController, BartApiControllerDelegate, Google
             
             // Set timer to segue back (by calling segueFromView) back to the main table view
             var timeoutText: Dictionary = ["titleString": "Time Out","messageString": "Sorry! Your request took too long."]
-            self.timeoutTimer = NSTimer.scheduledTimerWithTimeInterval(10, target: self, selector: Selector("timerTimeout:"), userInfo: timeoutText, repeats: false)
+            self.timeoutTimer = NSTimer.scheduledTimerWithTimeInterval(15, target: self, selector: Selector("timerTimeout:"), userInfo: timeoutText, repeats: false)
             
             
             //set this class as the delegate for the api controllers
@@ -108,7 +109,7 @@ class LoadingViewController: UIViewController, BartApiControllerDelegate, Google
                     
                 } else {
                     
-                    self.notificationCenter.addObserverForName("LocationDidUpdate", object: nil, queue: self.mainQueue) { _ in
+                    self.locationObserver = self.notificationCenter.addObserverForName("LocationDidUpdate", object: nil, queue: self.mainQueue) { _ in
                         
                         if let loc2d: CLLocationCoordinate2D =  self.locationManager.currentLocation2d {
                             
@@ -148,6 +149,9 @@ class LoadingViewController: UIViewController, BartApiControllerDelegate, Google
             self.bartApiHandler.searchBartFor(results)
         } else if results[0].agency == "muni" {
             self.muniApiHandler.searchMuniFor(results)
+        } else if results[0].agency == "caltrain" {
+            self.resultsRoutes = results
+            self.performSegueWithIdentifier("ResultsSegue", sender: self)
         }
         
 
@@ -182,6 +186,7 @@ class LoadingViewController: UIViewController, BartApiControllerDelegate, Google
     }
     
     func handleError(errorMessage: String) {
+        self.timeoutTimer.invalidate()
         self.googleApiHandler.cancelConnection()
         self.bartApiHandler.cancelConnection()
         self.muniApiHandler.cancelConnection()
@@ -199,6 +204,10 @@ class LoadingViewController: UIViewController, BartApiControllerDelegate, Google
     
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?)  {
+        
+        if self.locationObserver != nil {
+            self.notificationCenter.removeObserver(self.locationObserver!)
+        }
         
         // On segue, stop animating
         spinner!.stopAnimating()
