@@ -311,14 +311,8 @@ class ResultViewController: UIViewController, CLLocationManagerDelegate, Walking
 
     }
     
-<<<<<<< HEAD
     //MARK: Error handling
-=======
 
-    
-    // Error handling-----------------------------------------------------
-    
->>>>>>> 61ba6c7509a37302d074be0b523ad3010c38471a
     
     // This function gets called when the user clicks on the alertView button to dismiss it (see didReceiveGoogleResults)
     // It performs the unwind segue when done.
